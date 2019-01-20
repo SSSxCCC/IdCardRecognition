@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
+
+    <!-- 身份证照片 -->
+    <ImageView
+        android:layout_width="400dp"
+        android:layout_height="200dp"
+        android:id="@+id/photo"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="8dp" />
+
+    <!-- 状态信息 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/state"
+        android:text="@string/recognizing"
+        android:textSize="20sp"
+        android:layout_below="@id/photo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp" />
+
+    <!-- 姓名 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/name_label"
+        android:text="@string/name"
+        android:textSize="24sp"
+        android:layout_below="@id/state"
+        android:layout_alignParentStart="true"
+        android:labelFor="@id/name" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/name"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_alignBaseline="@id/name_label"
+        android:layout_toEndOf="@id/name_label" />
+
+    <!-- 性别 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sex_label"
+        android:text="@string/sex"
+        android:textSize="24sp"
+        android:layout_below="@id/name_label"
+        android:layout_alignParentStart="true"
+        android:labelFor="@id/sex" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sex"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_alignBaseline="@id/sex_label"
+        android:layout_toEndOf="@id/sex_label" />
+    <!-- 民族 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ethnicity_label"
+        android:text="@string/ethnicity"
+        android:textSize="24sp"
+        android:layout_alignBaseline="@id/sex"
+        android:layout_toEndOf="@id/sex"
+        android:labelFor="@id/ethnicity" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ethnicity"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_alignBaseline="@id/ethnicity_label"
+        android:layout_toEndOf="@id/ethnicity_label" />
+
+    <!-- 出生 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/birth_label"
+        android:text="@string/birth"
+        android:textSize="24sp"
+        android:layout_below="@id/sex_label"
+        android:layout_alignParentStart="true" />
+    <!-- 年 -->
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/year"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_alignBaseline="@id/birth_label"
+        android:layout_toEndOf="@id/birth_label" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/year_label"
+        android:text="@string/year"
+        android:textSize="24sp"
+        android:layout_alignBaseline="@id/year"
+        android:layout_toEndOf="@id/year" />
+    <!-- 月 -->
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/month"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_alignBaseline="@id/year_label"
+        android:layout_toEndOf="@id/year_label" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/month_label"
+        android:text="@string/month"
+        android:textSize="24sp"
+        android:layout_alignBaseline="@id/month"
+        android:layout_toEndOf="@id/month" />
+    <!-- 日 -->
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/day"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_alignBaseline="@id/month_label"
+        android:layout_toEndOf="@id/month_label" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/day_label"
+        android:text="@string/day"
+        android:textSize="24sp"
+        android:layout_alignBaseline="@id/day"
+        android:layout_toEndOf="@id/day" />
+
+    <!-- 号码 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/number_label"
+        android:text="@string/number"
+        android:textSize="24sp"
+        android:layout_below="@id/birth_label"
+        android:layout_alignParentStart="true"
+        android:labelFor="@id/number" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/number"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_alignBaseline="@id/number_label"
+        android:layout_toEndOf="@id/number_label" />
+
+    <!-- 住址 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/address_label"
+        android:text="@string/address"
+        android:textSize="24sp"
+        android:layout_below="@id/number_label"
+        android:layout_alignParentStart="true"
+        android:labelFor="@id/address" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/address"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_alignBaseline="@id/address_label"
+        android:layout_toEndOf="@id/address_label" />
+
+</RelativeLayout>

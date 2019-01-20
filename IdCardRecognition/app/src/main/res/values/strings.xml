@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">身份证识别</string>
+
+    <string name="recognizing">识别中…</string>
+    <string name="spend_time">耗时</string>
+
+    <string name="original_picture">原图</string>
+    <string name="id_card">身份证</string>
+    <string name="name">姓名</string>
+    <string name="sex">性别</string>
+    <string name="ethnicity">民族</string>
+    <string name="birth">出生</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="address">住址</string>
+    <string name="number">号码</string>
+
+    <dimen name="margin">10dp</dimen>
+</resources>
