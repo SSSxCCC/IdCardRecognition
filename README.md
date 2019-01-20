@@ -16,4 +16,6 @@ Recognition result:    识别结果：
 
 ![image](https://github.com/SSSxCCC/IdCardRecognition/raw/master/demo/2.jpg)
 
+博客（blog）：https://blog.csdn.net/SSSxCCC/article/details/86562279
+
 [tessdata]: https://github.com/tesseract-ocr/tessdata/blob/3.04.00/chi_sim.traineddata
