@@ -1,6 +1,8 @@
 package com.sc.idcardrecognition;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,6 +10,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -15,6 +20,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -35,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE); // 去掉ActionBar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); // 设置全屏
         setContentView(R.layout.activity_main);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+        }
 
         // 连接相机的SurfaceView
         cameraSurfaceView = findViewById(R.id.surfaceview);
@@ -101,6 +113,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        for (int grantResult : grantResults) {
+            if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "要使用此应用，你必须同意授权所有的权限！", Toast.LENGTH_LONG).show();
+                System.exit(-1);
+            }
+        }
+    }
+
     // 点击事件
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -112,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length); // 原图
                         Utility.saveBitmap(bitmap, getResources().getString(R.string.original_picture)); // 保存
 
-                        Intent intent = new Intent(MainActivity.this,ResultActivity.class);
+                        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
                         startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
