@@ -18,4 +18,4 @@ You must download [trained data file][tessdata] and put it in a directory named 
 
 博客（blog）：https://blog.csdn.net/SSSxCCC/article/details/86562279
 
-[tessdata]: https://github.com/tesseract-ocr/tessdata/blob/master/chi_sim.traineddata
+[tessdata]: https://github.com/tesseract-ocr/tessdata_fast/blob/master/chi_sim.traineddata
