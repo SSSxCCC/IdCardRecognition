@@ -16,6 +16,4 @@ You must download [trained data file][tessdata] and put it in a directory named 
 
 ![image](https://github.com/SSSxCCC/IdCardRecognition/raw/master/demo/2.jpg)
 
-博客（blog）：https://blog.csdn.net/SSSxCCC/article/details/86562279
-
 [tessdata]: https://github.com/tesseract-ocr/tessdata/blob/master/chi_sim.traineddata
