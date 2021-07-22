@@ -16,9 +16,9 @@ import java.util.Map;
 
 public class Utility {
 
-    public static final int WidthPixel = 1920; // 水平像素
-    public static final int HeightPixel = 1080; // 垂直像素
-    public static IdCard idCard = new IdCard(WidthPixel, HeightPixel, 0.8f); // 身份证图像对齐信息
+    public static final int WidthPixel = 1920;  // 水平像素
+    public static final int HeightPixel = 1080;  // 垂直像素
+    public static IdCard idCard = new IdCard(WidthPixel, HeightPixel, 0.8f);  // 身份证图像对齐信息
 
     // 保存图像
     public static void saveBitmap(Bitmap bitmap, File workDir, String name) {
@@ -62,7 +62,7 @@ public class Utility {
     public static String doOcr(Bitmap bitmap, String tessdataPath) {
         TessBaseAPI baseApi = new TessBaseAPI();
         baseApi.init(tessdataPath, "chi_sim");
-        //bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true); // 必须加此行，tess-two要求BMP必须为此配置
+        //bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);  // 必须加此行，tess-two要求BMP必须为此配置
         baseApi.setImage(bitmap);
         String text = baseApi.getUTF8Text();
         baseApi.clear();
@@ -70,7 +70,7 @@ public class Utility {
         return text;
     }
 
-    public static Map<Character, Character> DigitCorrectDictionary; // 常见数字错误纠正词典
+    public static Map<Character, Character> DigitCorrectDictionary;  // 常见数字错误纠正词典
     static {
         DigitCorrectDictionary = new HashMap<>();
         DigitCorrectDictionary.put('D', '0');

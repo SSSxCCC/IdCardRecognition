@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -29,8 +30,8 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        final TextView stateTextView = findViewById(R.id.state); // 显示当前状态信息的文本框
-        final long startTime = System.currentTimeMillis(); // 记录开始时间
+        final TextView stateTextView = findViewById(R.id.state);  // 显示当前状态信息的文本框
+        final long startTime = System.currentTimeMillis();  // 记录开始时间
         /*final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getResources().getString(R.string.recognizing));
         progressDialog.show();*/
@@ -69,12 +70,12 @@ public class ResultActivity extends AppCompatActivity {
                 getResources().getString(R.string.original_picture) + ".jpg");
         originalPicture = BitmapFactory.decodeFile(originalPictureFile.getPath());
 
-        IdCard.Rect rect = Utility.idCard.getCardRect(); // 得到身份证裁剪信息
+        Rect rect = Utility.idCard.getTagRectMap().get(R.string.id_card);  // 得到身份证裁剪信息
         Bitmap cardBitmap = Bitmap.createBitmap(originalPicture,
-                rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()); // 裁剪出身份证
+                rect.left, rect.top, rect.width(), rect.height());  // 裁剪出身份证
         Utility.saveBitmap(cardBitmap, myApplication.getWorkDirectory(),
-                getResources().getString(rect.getTagId())); // 保存
-        ((ImageView) findViewById(R.id.photo)).setImageBitmap(cardBitmap); // 显示裁剪的身份证
+                getResources().getString(R.string.id_card));  // 保存
+        ((ImageView) findViewById(R.id.photo)).setImageBitmap(cardBitmap);  // 显示裁剪的身份证
 
         // 对识别身份证的每个参数分别开线程并行处理
         for (int tagId : tagViewMap.keySet()) {
@@ -84,8 +85,7 @@ public class ResultActivity extends AppCompatActivity {
 
     // 执行算法的线程
     public class OcrThread extends Thread {
-
-        private int tagId;
+        private final int tagId;
 
         public OcrThread(int tagId) {
             this.tagId = tagId;
@@ -93,16 +93,16 @@ public class ResultActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            IdCard.Rect rect = Utility.idCard.getTagRectMap().get(tagId);
+            Rect rect = Utility.idCard.getTagRectMap().get(tagId);
             Bitmap bitmap = Bitmap.createBitmap(originalPicture,
-                    rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()); // 裁剪
-            //bitmap = Utility.binary(bitmap); // 二值化
+                    rect.left, rect.top, rect.width(), rect.height());  // 裁剪
+            //bitmap = Utility.binary(bitmap);  // 二值化
             MyApplication myApplication = (MyApplication) getApplication();
             Utility.saveBitmap(bitmap, myApplication.getWorkDirectory(),
-                    getResources().getString(tagId)); // 保存
+                    getResources().getString(tagId));  // 保存
             String result = Utility.doOcr(bitmap,
-                    myApplication.getWorkDirectory().getPath()); // 图像转换成文本
-            result = Utility.fix(result, tagId, getResources()); // 错误修正
+                    myApplication.getWorkDirectory().getPath());  // 图像转换成文本
+            result = Utility.fix(result, tagId, getResources());  // 错误修正
 
             Message message = new Message();
             message.what = tagId;

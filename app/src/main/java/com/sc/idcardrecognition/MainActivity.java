@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -119,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
                 paint.setAntiAlias(true);
                 paint.setColor(Color.RED);
                 paint.setStyle(Paint.Style.STROKE);
-                for (IdCard.Rect rect : Utility.idCard.getRects()) {
-                    canvas.drawRect(rect.toRect(), paint);
+                for (Rect rect : Utility.idCard.getTagRectMap().values()) {
+                    canvas.drawRect(rect, paint);
                 }
                 holder.unlockCanvasAndPost(canvas);
             }
