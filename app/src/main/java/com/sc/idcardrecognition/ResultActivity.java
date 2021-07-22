@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,11 +64,16 @@ public class ResultActivity extends AppCompatActivity {
         };
 
         // 读取原图
-        originalPicture = BitmapFactory.decodeFile(Utility.getWorkDirectory() + "/" + getResources().getString(R.string.original_picture) + ".jpg");
+        MyApplication myApplication = (MyApplication) getApplication();
+        File originalPictureFile = new File(myApplication.getWorkDirectory(),
+                getResources().getString(R.string.original_picture) + ".jpg");
+        originalPicture = BitmapFactory.decodeFile(originalPictureFile.getPath());
 
         IdCard.Rect rect = Utility.idCard.getCardRect(); // 得到身份证裁剪信息
-        Bitmap cardBitmap = Bitmap.createBitmap(originalPicture, rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()); // 裁剪出身份证
-        Utility.saveBitmap(cardBitmap, getResources().getString(rect.getTagId())); // 保存
+        Bitmap cardBitmap = Bitmap.createBitmap(originalPicture,
+                rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()); // 裁剪出身份证
+        Utility.saveBitmap(cardBitmap, myApplication.getWorkDirectory(),
+                getResources().getString(rect.getTagId())); // 保存
         ((ImageView) findViewById(R.id.photo)).setImageBitmap(cardBitmap); // 显示裁剪的身份证
 
         // 对识别身份证的每个参数分别开线程并行处理
@@ -88,10 +94,14 @@ public class ResultActivity extends AppCompatActivity {
         @Override
         public void run() {
             IdCard.Rect rect = Utility.idCard.getTagRectMap().get(tagId);
-            Bitmap bitmap = Bitmap.createBitmap(originalPicture, rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()); // 裁剪
+            Bitmap bitmap = Bitmap.createBitmap(originalPicture,
+                    rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()); // 裁剪
             //bitmap = Utility.binary(bitmap); // 二值化
-            Utility.saveBitmap(bitmap, getResources().getString(tagId)); // 保存
-            String result = Utility.doOcr(bitmap); // 图像转换成文本
+            MyApplication myApplication = (MyApplication) getApplication();
+            Utility.saveBitmap(bitmap, myApplication.getWorkDirectory(),
+                    getResources().getString(tagId)); // 保存
+            String result = Utility.doOcr(bitmap,
+                    myApplication.getWorkDirectory().getPath()); // 图像转换成文本
             result = Utility.fix(result, tagId, getResources()); // 错误修正
 
             Message message = new Message();

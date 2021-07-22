@@ -18,26 +18,16 @@ public class Utility {
 
     public static final int WidthPixel = 1920; // 水平像素
     public static final int HeightPixel = 1080; // 垂直像素
-    public static IdCard idCard = new IdCard(WidthPixel, HeightPixel, 0.9f); // 身份证图像对齐信息
-
-    // 工作目录
-    public static File getWorkDirectory() {
-        return new File(Environment.getExternalStorageDirectory(), "tessdata");
-    }
-
-    // tessdata的目录
-    public static String getTessdataPath() {
-        return Environment.getExternalStorageDirectory().getPath();
-    }
+    public static IdCard idCard = new IdCard(WidthPixel, HeightPixel, 0.8f); // 身份证图像对齐信息
 
     // 保存图像
-    public static void saveBitmap(Bitmap bitmap, String name) {
+    public static void saveBitmap(Bitmap bitmap, File workDir, String name) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
         try {
             baos.close();
-            File file = new File(Utility.getWorkDirectory(),name + ".jpg");
+            File file = new File(workDir,name + ".jpg");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(data);
             fos.close();
@@ -69,9 +59,9 @@ public class Utility {
     }
 
     // OCR算法识别图像的文字
-    public static String doOcr(Bitmap bitmap) {
+    public static String doOcr(Bitmap bitmap, String tessdataPath) {
         TessBaseAPI baseApi = new TessBaseAPI();
-        baseApi.init(Utility.getTessdataPath(), "chi_sim");
+        baseApi.init(tessdataPath, "chi_sim");
         //bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true); // 必须加此行，tess-two要求BMP必须为此配置
         baseApi.setImage(bitmap);
         String text = baseApi.getUTF8Text();
@@ -84,8 +74,12 @@ public class Utility {
     static {
         DigitCorrectDictionary = new HashMap<>();
         DigitCorrectDictionary.put('D', '0');
+        DigitCorrectDictionary.put('o', '0');
+        DigitCorrectDictionary.put('O', '0');
         DigitCorrectDictionary.put('l', '1');
         DigitCorrectDictionary.put('I', '1');
+        DigitCorrectDictionary.put('z', '2');
+        DigitCorrectDictionary.put('Z', '2');
         DigitCorrectDictionary.put('S', '5');
         DigitCorrectDictionary.put('s', '5');
         DigitCorrectDictionary.put('g', '9');
@@ -94,43 +88,33 @@ public class Utility {
     // 修正常见的错误
     public static String fix(String text, int tagId, Resources resources) {
         switch (tagId) {
-            case R.string.name:                                          // 姓名
-                text = text.replace("\n", "");      // 不能换行
+            case R.string.name:  // 姓名
+                text = text.replace("\n", "");  // 不能换行
                 break;
-            case R.string.sex:                                           // 性别
-                text = text.replace("\n", "");      // 不能换行
-                text = text.replace(" ", "");       // 不能有空格
-                if (text.startsWith("田") || text.endsWith("力"))        // “男”被识别成“田力”
+            case R.string.sex:  // 性别
+                text = text.replace("\n", "");  // 不能换行
+                text = text.replace(" ", "");  // 不能有空格
+                if (text.startsWith("田") || text.endsWith("力")  // “男”被识别成“田力”
+                        || text.contains("另"))  // “男”被识别成“另”
                     text = "男";
                 break;
-            case R.string.ethnicity:                                    // 民族
-                text = text.replace("\n", "");      // 不能换行
+            case R.string.ethnicity:  // 民族
+                text = text.replace("\n", "");  // 不能换行
                 break;
-            case R.string.year:                                          // 年
-                text = text.replace("\n", "");      // 不能换行
-                text = text.replace(" ", "");       // 不能有空格
-                text = correctDigit(text);                                // 数字纠正
-                text = onlyDigit(text);                                   // 只留数字
+            case R.string.year:  // 年
+            case R.string.month:  // 月
+            case R.string.day:  // 日
+                text = text.replace("\n", "");  // 不能换行
+                text = text.replace(" ", "");  // 不能有空格
+                text = correctDigit(text);  // 数字纠正
+                text = onlyDigit(text);  // 只留数字
                 break;
-            case R.string.month:                                         // 月
-                text = text.replace("\n", "");      // 不能换行
-                text = text.replace(" ", "");       // 不能有空格
-                text = correctDigit(text);                                // 数字纠正
-                text = onlyDigit(text);                                   // 只留数字
+            case R.string.number:  // 号码
+                text = text.replace("\n", "");  // 不能换行
+                text = text.replace(" ", "");  // 不能有空格
+                text = correctDigit(text);  // 数字纠正
                 break;
-            case R.string.day:                                           // 日
-                text = text.replace("\n", "");      // 不能换行
-                text = text.replace(" ", "");       // 不能有空格
-                text = correctDigit(text);                                // 数字纠正
-                text = onlyDigit(text);                                   // 只留数字
-                break;
-            case R.string.number:                                        // 号码
-                text = text.replace("\n", "");      // 不能换行
-                text = text.replace(" ", "");       // 不能有空格
-                text = correctDigit(text);                                // 数字纠正
-                break;
-            case R.string.address:                                       // 住址
-
+            case R.string.address:  // 住址
                 break;
             default:
                 Log.e("Fix", "发现不存在的身份证元素：" + resources.getString(tagId));
@@ -165,5 +149,4 @@ public class Utility {
         }
         return digitText.toString();
     }
-
 }

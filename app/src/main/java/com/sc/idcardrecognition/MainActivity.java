@@ -15,16 +15,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,16 +39,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); // 去掉ActionBar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); // 设置全屏
-        setContentView(R.layout.activity_main);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+        } else {
+            initContentView();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        for (int grantResult : grantResults) {
+            if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "要使用此应用，你必须同意授权所有的权限！", Toast.LENGTH_LONG).show();
+                System.exit(-1);
+            }
+        }
+        initContentView();
+    }
+
+    private void initContentView() {
+        setContentView(R.layout.activity_main);
 
         // 连接相机的SurfaceView
         cameraSurfaceView = findViewById(R.id.surfaceview);
+        //ViewGroup.LayoutParams lp = cameraSurfaceView.getLayoutParams();
         SurfaceHolder holder = cameraSurfaceView.getHolder();
         holder.setFixedSize(Utility.WidthPixel, Utility.HeightPixel);// 设置分辨率
         holder.setKeepScreenOn(true);
@@ -61,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     Camera.Parameters params = camera.getParameters();
                     params.setJpegQuality(80); // 设置照片的质量
                     params.setPictureSize(Utility.WidthPixel, Utility.HeightPixel);
-                    params.setPreviewFrameRate(10); // 预览帧率
+                    params.setPreviewFrameRate(30); // 预览帧率
                     params.setPreviewSize(Utility.WidthPixel, Utility.HeightPixel);
                     camera.setParameters(params); // 将参数设置给相机
                     camera.setPreviewDisplay(cameraSurfaceView.getHolder()); // 设置预览显示
@@ -113,36 +129,31 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        for (int grantResult : grantResults) {
-            if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "要使用此应用，你必须同意授权所有的权限！", Toast.LENGTH_LONG).show();
-                System.exit(-1);
-            }
-        }
-    }
-
     // 点击事件
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (allowTakePicture) {
-            camera.takePicture(null, null, new Camera.PictureCallback() { // 拍照
-                @Override
-                public void onPictureTaken(byte[] data, Camera camera) { // 处理得到的照片
-                    try {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length); // 原图
-                        Utility.saveBitmap(bitmap, getResources().getString(R.string.original_picture)); // 保存
-
-                        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-                        startActivity(intent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            allowTakePicture = false;
+        if (!allowTakePicture) {
+            return super.onTouchEvent(event);
         }
+
+        camera.takePicture(null, null, new Camera.PictureCallback() { // 拍照
+            @Override
+            public void onPictureTaken(byte[] data, Camera camera) { // 处理得到的照片
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length); // 原图
+                    MyApplication myApplication = (MyApplication) getApplication();
+                    Utility.saveBitmap(bitmap, myApplication.getWorkDirectory(),
+                            getResources().getString(R.string.original_picture)); // 保存
+
+                    Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        allowTakePicture = false;
         return super.onTouchEvent(event);
     }
 }
