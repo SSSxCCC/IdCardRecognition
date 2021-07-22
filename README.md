@@ -1,22 +1,10 @@
 # IdCardRecognition
 
-An android id card recognition app based on tesserect.
-
-## Run
-
-Download source code.
-
-Open IdCardRecognition project in Android Studio.
-
-Connect an android phone to your PC by USB.
-
-Click "Run 'app'".
-
----
-
 一个基于tesserect的身份证识别安卓app。
 
-注：chi_sim.traineddata来自https://github.com/tesseract-ocr/tessdata/blob/master/chi_sim.traineddata
+介绍博客：https://blog.csdn.net/SSSxCCC/article/details/119000743
+
+chi_sim.traineddata来自：https://github.com/tesseract-ocr/tessdata/blob/master/chi_sim.traineddata
 
 ## 运行
 
