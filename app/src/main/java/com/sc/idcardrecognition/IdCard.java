@@ -1,6 +1,5 @@
 package com.sc.idcardrecognition;
 
-import android.content.res.Resources;
 import android.graphics.Rect;
 
 import java.util.HashMap;

@@ -62,7 +62,6 @@ public class Utility {
     public static String doOcr(Bitmap bitmap, String tessdataPath) {
         TessBaseAPI baseApi = new TessBaseAPI();
         baseApi.init(tessdataPath, "chi_sim");
-        //bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);  // 必须加此行，tess-two要求BMP必须为此配置
         baseApi.setImage(bitmap);
         String text = baseApi.getUTF8Text();
         baseApi.clear();

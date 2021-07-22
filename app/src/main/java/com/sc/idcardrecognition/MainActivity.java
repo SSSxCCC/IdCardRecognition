@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             @Override public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-                if(camera != null){
+                if (camera != null){
                     camera.release();
                     camera = null;
                 }
@@ -107,10 +107,10 @@ public class MainActivity extends AppCompatActivity {
 
         // 顶层的SurfaceView，根据idCard对象里面的信息显示矩形区域
         topSurfaceView = findViewById(R.id.topSurfaceView);
-        topSurfaceView.setZOrderOnTop(true); // 在顶层
+        topSurfaceView.setZOrderOnTop(true);  // 在顶层
         holder = topSurfaceView.getHolder();
         holder.setFixedSize(Utility.WidthPixel, Utility.HeightPixel);
-        holder.setFormat(PixelFormat.TRANSPARENT); // 透明的
+        holder.setFormat(PixelFormat.TRANSPARENT);  // 透明的
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
@@ -137,14 +137,14 @@ public class MainActivity extends AppCompatActivity {
             return super.onTouchEvent(event);
         }
 
-        camera.takePicture(null, null, new Camera.PictureCallback() { // 拍照
+        camera.takePicture(null, null, new Camera.PictureCallback() {  // 拍照
             @Override
-            public void onPictureTaken(byte[] data, Camera camera) { // 处理得到的照片
+            public void onPictureTaken(byte[] data, Camera camera) {  // 处理得到的照片
                 try {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length); // 原图
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);  // 原图
                     MyApplication myApplication = (MyApplication) getApplication();
                     Utility.saveBitmap(bitmap, myApplication.getWorkDirectory(),
-                            getResources().getString(R.string.original_picture)); // 保存
+                            getResources().getString(R.string.original_picture));  // 保存
 
                     Intent intent = new Intent(MainActivity.this, ResultActivity.class);
                     startActivity(intent);
