@@ -16,7 +16,7 @@ chi_sim.traineddata来自：https://github.com/tesseract-ocr/tessdata/blob/maste
 
 点击“Run 'app'”。
 
-## 示例
+## 演示
 
 扫描身份证（Scan id card）：
 
